@@ -1,0 +1,38 @@
+<nav id="sidebar" v-bind:class = "{active: isActive}" >
+    <div class="sidebar-header">
+        <a href="">   
+            <h3>RedesUsach</h3>
+            <strong>RU</strong>
+        </a>
+    </div>
+
+    <div @click="collapseSide" class="text-center flechas">
+      <a href="#" class="">
+        <i class="glyphicon glyphicon-resize-horizontal "></i>
+      </a>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="">
+            <a href="#/calidad">
+              <i class="glyphicon glyphicon-map-marker colorIcono"></i>
+                Calidad
+            </a>
+             <a href="#/estadisticas" style="text-align: center;">
+              <i class="glyphicon glyphicon glyphicon-stats colorIcono"></i>
+              Estadísticas por puntos de interés
+            </a>
+            <!-- <a @click = "show_legend" style = "cursor:pointer">
+                <i class = "glyphicon glyphicon glyphicon-tags"></i>
+                Mostrar Leyenda
+            </a>! -->
+            <a  @click="logout" href="#">
+                <i class="glyphicon glyphicon-log-out colorIcono"></i>
+                 Salir
+            </a>
+            
+
+            
+        </li>
+    </ul>
+</nav>

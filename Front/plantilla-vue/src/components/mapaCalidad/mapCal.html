@@ -1,0 +1,51 @@
+<div class="cuerpo wrapper">
+	<div class="cuerpo" id="pagMapa">
+		
+			<div class="panel paneltop">
+				
+			<div class="calendar panel">
+				<datepicker class="fechainicio" placeholder="Fecha de inicio" v-model="fechaInicio" name="uniquename2"></datepicker>
+				<datepicker placeholder="Fecha de término" v-model="fechaTermino" name="uniquename3"></datepicker>
+			</div>
+			<!-- <div class="calendar">
+				
+			</div>
+			 -->
+			<div class="horario">
+				<form action="">
+					<input type="radio" name="hour" v-model="horario" value="mañana"> Mañana (8-12)&nbsp;&nbsp;
+					<input type="radio" name="hour" v-model="horario" value="tarde"> Tarde (12 -17)&nbsp;&nbsp;
+					<input type="radio" name="hour" v-model="horario" value="noche"> Noche (18-24)&nbsp;&nbsp;
+				</form>
+			</div>
+			
+			<div class="botongenerar">
+
+				<Spinner v-if="cargando" style="margin-right: 30px"></Spinner>
+				<button type = "button" @click="loadDataMap"  class="btn btn-warning botongen">Generar</button>
+			
+			</div>
+			
+		</div>
+		<div id="map"></div>
+		<div id = "legend3" v-bind:style = "{ 'display' : display }"  class = "container-fluid legend2" >
+			<!-- <div id = "legendGradient">
+				
+			</div> -->
+			<div   style="display:flex;justify-content:center">
+
+				<div class = "significado" style="display:flex;align-items: center;align-content: center">
+					<div class="bg-success circulo" style = "background: #f31010; " ></div>
+					<span class = "miInline" >Mala</span>
+					<div class="bg-success  circulo " style = "background:#f37010" ></div>
+					<span class = "miInline" >Moderada</span>
+					<div class="bg-success circulo" style = "background: #f3e610" ></div>
+					<span class = "miInline" >Buena</span>
+					<div class="bg-success circulo" style = "background: #44f310; " ></div>
+					<span class = "miInline">Excelente</span>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
