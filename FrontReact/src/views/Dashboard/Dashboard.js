@@ -455,6 +455,12 @@ const mainChartOpts = {
 };
 
 //
+const bar = {
+  labels: ['Mañana','Tarde','Noche'],
+  datasets: [
+  ],
+};
+
 var PieChart={
     labels: [
       'Excellent',
@@ -467,11 +473,11 @@ var PieChart={
       {
         data: [],
         backgroundColor: [
-          '#00FFFF',
-          '#80FF00',
-          '#FFFF00',
-          "#FF4000",
-          "#848484",
+          '#00FFFF', //rgb(0, 255, 255)
+          '#80FF00', //rgb(128, 255, 0)
+          '#FFFF00', //rgb(255, 255, 0)
+          "#FF4000", //rgb(255, 64, 0)
+          "#848484", //rgb(132, 132, 132)
         ],
         hoverBackgroundColor: [
           '#00FFFF',
@@ -487,33 +493,39 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
 
     this.state = {
       pieChard:null,
+      barChard:null,
       salas:null,
-      nombreSala:"General",
-      dropdownOpen: false,
+      nombreSalaPie:"Resumen",
+      nombreSalaBar:"Resumen",
+      dropdownOpenPie: false,
+      dropdownOpenBar: false,
       radioSelected: 2,
+      cantidadDatosBar:0,
     };
   }
   componentWillMount(){
-    var salas=this.genericFilter(DataRecovery);
+    var salas=this.genericFilterPie(DataRecovery);
+    var salas2=this.genericFilterBar(DataRecovery);
     this.setState({
-      salas: Object.keys(salas)
+      salas: Object.keys(salas),
+
     })
-    this.moveDataToPie(salas,"General");
+    this.moveDataToPie(salas,"Resumen");
+    this.moveDataToBar(salas2,"Resumen");
   }
 
-  genericFilter(data){
+  genericFilterPie(data){
     let salas={
 
     };
     for (let i = 0; i < data.length; i++) {
         const element = data[i];
-        salas["General"]=(salas["General"]==undefined)?{}:salas["General"];
-        salas["General"][element.estado]=(salas["General"][element.estado]==undefined)?1:salas["General"][element.estado]+1;
+        salas["Resumen"]=(salas["Resumen"]==undefined)?{}:salas["Resumen"];
+        salas["Resumen"][element.estado]=(salas["Resumen"][element.estado]==undefined)?1:salas["Resumen"][element.estado]+1;
         salas[element.lugar]=(salas[element.lugar]==undefined)?{}:salas[element.lugar];
         const existencia=salas[element.lugar][element.estado];
         salas[element.lugar][element.estado]=(existencia==undefined)?1:existencia+1;
@@ -522,8 +534,109 @@ class Dashboard extends Component {
     console.log(salas);
     return salas;
   }
+  genericFilterBar(data){
+    /*struct json
+    {
+     resumen:
+     {
+       manana:[extelente,good,moderate,malo,null]
+      ...
+     }
+    }
+    
+    */
+    let base={
+      Mañana:[0,0,0,0,0],
+      Tarde:[0,0,0,0,0],
+      Noche:[0,0,0,0,0],
+    }
+    let salas={
 
-  
+    };
+    for (let i = 0; i < data.length; i++) {
+        const element = data[i];
+
+        salas["Resumen"]=(salas["Resumen"]==undefined)?{
+          Mañana:[0,0,0,0,0],
+          Tarde:[0,0,0,0,0],
+          Noche:[0,0,0,0,0],
+        }: salas["Resumen"];
+
+        salas[element.lugar]=(salas[element.lugar]==undefined)?{
+          Mañana:[0,0,0,0,0],
+          Tarde:[0,0,0,0,0],
+          Noche:[0,0,0,0,0],
+        }:salas[element.lugar];
+        
+        if(element.estado=="EXCELLENT"){
+          salas[element.lugar][element.bloque][0]++;
+          salas["Resumen"][element.bloque][0]++;
+        }
+        else if(element.estado=="GOOD"){
+          salas[element.lugar][element.bloque][1]++;
+          salas["Resumen"][element.bloque][1]++;
+        }
+        else if(element.estado=="MODERATE"){
+          salas[element.lugar][element.bloque][2]++;
+          salas["Resumen"][element.bloque][2]++;
+        }
+        else if(element.estado=="BAD"){
+          salas[element.lugar][element.bloque][3]++;
+          salas["Resumen"][element.bloque][3]++;
+        }
+        else if(element.estado==null){
+          salas[element.lugar][element.bloque][4]++;
+          salas["Resumen"][element.bloque][4]++;
+        }
+    }
+    console.log(salas);
+    return salas;
+  }
+
+  moveDataToBar(salas,lugar){
+    //var keys=Object.keys(salas);
+    var color=["(0, 255, 255)","(128, 255, 0)","(255, 255, 0)","(255, 64, 0)","(132, 132, 132)"]
+    var estado=['Excellent',
+    'Good',
+    'Moderate',
+    'Bad',
+    'Undefined']
+    var data=[]
+    bar.datasets=[];
+    var cantidad=0;
+    for (let i = 0; i < 5; i++) {
+      let dataTemp=[];
+      cantidad=cantidad+salas[lugar]["Mañana"][i]+salas[lugar]["Tarde"][i]+salas[lugar]["Noche"][i];
+      dataTemp.push(salas[lugar]["Mañana"][i]);
+      dataTemp.push(salas[lugar]["Tarde"][i]);
+      dataTemp.push(salas[lugar]["Noche"][i]);
+      this.addingDataBar(estado[i],dataTemp,color[i])
+      //data.push(dataTemp);
+    }
+    this.setState({
+      barChard:bar,
+      cantidadDatosBar:cantidad
+    })
+  }
+  addingDataBar=(nombre,data,rgb)=>{
+    
+    var hue = 'rgba' + rgb.substr(0,rgb.length-1);
+    var element={
+      label: nombre,
+      backgroundColor: hue+',0.2)',
+      borderColor: hue+',1)',
+      borderWidth: 1,
+      hoverBackgroundColor: hue+',0.4)',
+      hoverBorderColor: hue+',1)',
+      data: data,
+    }
+    bar.datasets.push(element);
+    //console.log(bar);
+    /*this.setState({
+      barChard:bar,
+    })*/
+  }
+
   moveDataToPie(salas,lugar){
     const datos=salas[lugar];
     let data=[];
@@ -541,16 +654,30 @@ class Dashboard extends Component {
 
   handleMoveDataPie=event=>{
     const name=event.target.name;
-    const salas=this.genericFilter(DataRecovery);
+    const salas=this.genericFilterPie(DataRecovery);
     this.moveDataToPie(salas,name);
     this.setState({
-      nombreSala:name
+      nombreSalaPie:name
+    });
+  }
+  handleMoveDataBar=event=>{
+    const name=event.target.name;
+    const salas=this.genericFilterBar(DataRecovery);
+    this.moveDataToBar(salas,name);
+    this.setState({
+      nombreSalaBar:name
     });
   }
 
-  toggle() {
+
+  togglePie() {
     this.setState({
-      dropdownOpen: !this.state.dropdownOpen,
+      dropdownOpenPie: !this.state.dropdownOpenPie,
+    });
+  }
+  toggleBar() {
+    this.setState({
+      dropdownOpenBar: !this.state.dropdownOpenPie,
     });
   }
 
@@ -573,9 +700,9 @@ class Dashboard extends Component {
                 <CardHeader>
                   Pie Chart
                   <div className="card-header-actions">
-                    <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={() => { this.toggle(); }}>
+                    <ButtonDropdown isOpen={this.state.dropdownOpenPie} toggle={() => { this.togglePie(); }}>
                     <DropdownToggle caret>
-                      {this.state.nombreSala}
+                      {this.state.nombreSalaPie}
                     </DropdownToggle>
                     <DropdownMenu right>
                       <DropdownItem header>Salas</DropdownItem>
@@ -591,6 +718,44 @@ class Dashboard extends Component {
                   <div className="chart-wrapper" >
                     <Pie data={this.state.pieChard} height="80%"/>
                   </div>
+                </CardBody>
+              </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Card>
+                <CardHeader>
+                    Bar
+                    <div className="card-header-actions">
+                    <ButtonDropdown isOpen={this.state.dropdownOpenBar} toggle={() => { this.toggleBar(); }}>
+                    <DropdownToggle caret>
+                      {this.state.nombreSalaBar}
+                    </DropdownToggle>
+                    <DropdownMenu right>
+                      <DropdownItem header>Salas</DropdownItem>
+                      {this.state.salas && this.state.salas.map((sala,key)=>{
+                         return <DropdownItem key={key} name={sala} onClick={this.handleMoveDataBar}>{sala}</DropdownItem>;
+                      })
+                      }
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  <div className="chart-wrapper" >
+                    <Bar data={this.state.barChard} />
+                  </div>
+                  <Row>
+                    <Col sm={{ size: 4, order: 6, offset: 4 }}>
+                      <Card className="card-accent-success text-white bg-info text-center">
+                        <CardBody>
+                          Cantidad de datos para <strong>{this.state.nombreSalaBar} </strong>: <strong>{this.state.cantidadDatosBar} </strong> datos
+                        </CardBody>
+                      </Card>
+                  </Col>
+                    </Row>
+                  
                 </CardBody>
               </Card>
           </Col>

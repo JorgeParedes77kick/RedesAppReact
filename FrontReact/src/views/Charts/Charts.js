@@ -42,6 +42,15 @@ const bar = {
       hoverBorderColor: 'rgba(255,99,132,1)',
       data: [65, 59, 80, 20, 56, 55, 40],
     },
+    {
+      label: 'doble sss',
+      backgroundColor: 'rgba(77,228,112,0.2)',
+      borderColor: 'rgba(77,228,112,1)',
+      borderWidth: 1,
+      hoverBackgroundColor: 'rgba(77,228,112,0.4)',
+      hoverBorderColor: 'rgba(77,228,112,1)',
+      data: [10, 30, 75, 75, -2, 100, 90],
+    },
   ],
 };
 
@@ -183,12 +192,6 @@ class Charts extends Component {
             <CardBody>
               <div className="chart-wrapper">
                 <Bar data={bar} options={options} />
-              </div>
-              <div className="chart-wrapper">
-                <Bar  data={bar}
-                  options={{
-                      maintainAspectRatio: false
-                  }} />
               </div>
             </CardBody>
           </Card>
