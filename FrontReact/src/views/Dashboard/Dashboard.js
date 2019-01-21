@@ -1,5 +1,6 @@
 import React, { Component, lazy, Suspense } from 'react';
 import { Bar, Doughnut, Line, Pie, Polar, Radar } from 'react-chartjs-2';
+import Axios from 'axios';
 import {
   Badge,
   Button,
@@ -24,7 +25,8 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 
 import DataRecovery from './staticDataRecovery';
-
+import { from } from 'rxjs';
+const urlBase="http://kamino.diinf.usach.cl/redes-0.0.1-SNAPSHOT/signals";
 const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
 
 const brandPrimary = getStyle('--primary')
@@ -496,6 +498,7 @@ class Dashboard extends Component {
     this.onRadioBtnClick = this.onRadioBtnClick.bind(this);
 
     this.state = {
+      recovery:DataRecovery,
       pieChard:null,
       barChard:null,
       salas:null,
@@ -507,9 +510,45 @@ class Dashboard extends Component {
       cantidadDatosBar:0,
     };
   }
+
   componentWillMount(){
-    var salas=this.genericFilterPie(DataRecovery);
-    var salas2=this.genericFilterBar(DataRecovery);
+    Axios.get(urlBase).then(
+      (response)=>{
+        this.setState({
+          recovery:response.data
+        });
+        var salas=this.genericFilterPie(this.state.recovery);
+        var salas2=this.genericFilterBar(this.state.recovery);
+    
+      this.setState({
+        salas: Object.keys(salas),
+
+      })
+      this.moveDataToPie(salas,"Resumen");
+      this.moveDataToBar(salas2,"Resumen");
+
+      console.log(response);
+    })
+    .catch((error)=>{
+      console.log(error);
+      var salas=this.genericFilterPie(this.state.recovery);
+      var salas2=this.genericFilterBar(this.state.recovery);
+    
+      this.setState({
+        salas: Object.keys(salas),
+
+      })
+      this.moveDataToPie(salas,"Resumen");
+      this.moveDataToBar(salas2,"Resumen");
+    });
+      
+  }
+
+  componentDidMount(){
+    
+    var salas=this.genericFilterPie(this.state.recovery);
+    var salas2=this.genericFilterBar(this.state.recovery);
+    
     this.setState({
       salas: Object.keys(salas),
 
@@ -677,7 +716,7 @@ class Dashboard extends Component {
   }
   toggleBar() {
     this.setState({
-      dropdownOpenBar: !this.state.dropdownOpenPie,
+      dropdownOpenBar: !this.state.dropdownOpenBar,
     });
   }
 
@@ -744,7 +783,7 @@ class Dashboard extends Component {
                 </CardHeader>
                 <CardBody>
                   <div className="chart-wrapper" >
-                    <Bar data={this.state.barChard} />
+                    <Bar data={this.state.barChard} height="90%"/>
                   </div>
                   <Row>
                     <Col sm={{ size: 4, order: 6, offset: 4 }}>
