@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Nav, NavItem, NavLink } from 'reactstrap';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux'
+
 
 import { AppAsideToggler, AppHeaderDropdown, AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import logo from '../../assets/img/brand/logo.svg'
 import sygnet from '../../assets/img/brand/sygnet.svg'
 import store from '../../store';
 import jwt from 'jsonwebtoken';
-
+import {connect} from 'react-redux'
 const propTypes = {
   children: PropTypes.node,
 };
@@ -25,7 +25,6 @@ class DefaultHeader extends Component {
  this.state = {
  infoUsuario: "",
  obtenerUsuario:"",
- espera:false,
  exist:false,
  exist2:false,
 
@@ -41,9 +40,6 @@ class DefaultHeader extends Component {
 componentWillMount(){
   this.comprobarUsuario(this.props.infoUsuarios);
   this.respaldo();
-  this.setState({ 
-    espera:false,
-  })
 };
 respaldo(){
   if(this.props.infoUsuarios !== null || this.props.infoUsuarios !== '' ){
@@ -52,7 +48,6 @@ respaldo(){
         obtenerUsuario:aux
     });
     this.agregarUsuario(aux);
-    
   }
 };
 guardarDatos(){
@@ -70,14 +65,10 @@ comprobarUsuario(tipoUsuario){
       this.notUser(this.props.infoUsuarios);
     }
     else{
-      this.props.setUsuario(result);
       this.agregarUsuario(result);
     }
   }
   else{
-    this.setState({ 
-      espera:false,
-    })
     this.guardarDatos();
   }
 
@@ -124,7 +115,39 @@ render() {
           full={{ src: logo, width: 89, height: 25, alt: 'CoreUI Logo' }}
           minimized={{ src: sygnet, width: 30, height: 30, alt: 'CoreUI Logo' }}
         />
-        <div> {this.showName(this.props)} </div>
+        <Nav className="ml-auto" navbar>
+            <div className="ml-auto text-center" >
+              {this.showName(this.props)}
+            </div>
+            <div className="ml-auto text-center" ></div>
+              {/*<NavItem className="d-md-down-none">
+                <NavLink href="#"><i className="icon-bell"></i><Badge pill color="danger">5</Badge></NavLink>
+              </NavItem>
+              <NavItem className="d-md-down-none">
+                <NavLink href="#"><i className="icon-list"></i></NavLink>
+              </NavItem>
+              <NavItem className="d-md-down-none">
+                <NavLink href="#"><i className="icon-location-pin"></i></NavLink>
+              </NavItem>*/}
+              <AppHeaderDropdown direction="down">
+                <DropdownToggle nav>
+                  <span className="navbar-toggler-icon"/> 
+                </DropdownToggle>
+                <DropdownMenu right style={{ right: 'auto' }}>
+                
+                <DropdownItem header tag="div" className="text-center"><strong>Cuenta</strong></DropdownItem>
+                <Link to={{
+                    pathname: '/Login',
+                  }}>
+                    <DropdownItem  className="text-center" onClick={()=> this.props.salirCuenta(this.props.infoUsuario)}>
+                      <i className="fa fa-lock"></i> Salir
+                      </DropdownItem>
+                  </Link>
+                
+                
+                </DropdownMenu>
+              </AppHeaderDropdown>
+            </Nav>
       </React.Fragment>
     );
   }

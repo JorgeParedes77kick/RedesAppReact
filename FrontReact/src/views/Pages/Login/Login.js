@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Row, CardHeader, CardBody, CardGroup, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
+import { Button, Alert, Card, Row, CardHeader, CardBody, CardGroup, Col, Container, Input, Modal, ModalBody, ModalFooter, ModalHeader, InputGroup, InputGroupAddon, InputGroupText } from 'reactstrap';
 import  { Link } from 'react-router-dom';
 import { GoogleLogin } from 'react-google-login-component';
 import Axios from 'axios';
@@ -13,9 +13,9 @@ import {connect} from 'react-redux'
 var sectionStyle = {
     width: "100%",
     height: "100%",
-    position: "fixed",
+    position: "center",
     backgroundRepeat: "no-repeat",
-    opacity: "0.8",
+    resizeMode: 'cover',
     backgroundImage: "url(" + fondo + ")"
   };
 
@@ -174,8 +174,10 @@ class Login extends Component {
         <div className="app flex-row align-items-center">
           <Container>
             <Row className="justify-content-center">
-              <Col md="10">
-              <span className="display-3 text-white " style={{textAlign: "center" }} > Bienvenido a la plataforma</span>
+              <Col  xs={8} md={6}>
+              <Alert color="dark">
+              <span className="display-1 text-dark text-background  "> Bienvenido a la plataforma</span>
+              </Alert>
               </Col>
             </Row>
             <Row className="justify-content-center">
@@ -200,15 +202,12 @@ class Login extends Component {
 
             <ModalHeader toggle={this.toggleInfo}>Inicio de sesión</ModalHeader>
             <ModalBody>
-            {this.state.espera?
               <div className="row">
                 <div className ='col'>
                   <div className='defaultSpinner' ></div>
                 </div>
               </div>
-              :
               <span>Bienvenid@ <strong> {this.state.nombreUsuario}</strong>, su inicio de sesión fue exitoso.</span>
-            }
               </ModalBody>
             <ModalFooter>
               <Link to={{
