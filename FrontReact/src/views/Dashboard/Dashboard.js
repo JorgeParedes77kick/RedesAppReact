@@ -20,446 +20,29 @@ import {
   DropdownToggle,
   Progress,
   Row,
-  Table,
+  Table,Tooltip
 } from 'reactstrap';
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips';
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 
 import DataRecovery from './staticDataRecovery';
 import { from } from 'rxjs';
+import { object } from 'prop-types';
 const urlBase="http://kamino.diinf.usach.cl/redes-0.0.1-SNAPSHOT/signals";
-const Widget03 = lazy(() => import('../../views/Widgets/Widget03'));
-
-const brandPrimary = getStyle('--primary')
-const brandSuccess = getStyle('--success')
-const brandInfo = getStyle('--info')
-const brandWarning = getStyle('--warning')
-const brandDanger = getStyle('--danger')
-
-// Card Chart 1
-const cardChartData1 = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: brandPrimary,
-      borderColor: 'rgba(255,255,255,.55)',
-      data: [65, 59, 84, 84, 51, 55, 40],
-    },
-  ],
-};
-
-const cardChartOpts1 = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        gridLines: {
-          color: 'transparent',
-          zeroLineColor: 'transparent',
-        },
-        ticks: {
-          fontSize: 2,
-          fontColor: 'transparent',
-        },
-
-      }],
-    yAxes: [
-      {
-        display: false,
-        ticks: {
-          display: false,
-          min: Math.min.apply(Math, cardChartData1.datasets[0].data) - 5,
-          max: Math.max.apply(Math, cardChartData1.datasets[0].data) + 5,
-        },
-      }],
-  },
-  elements: {
-    line: {
-      borderWidth: 1,
-    },
-    point: {
-      radius: 4,
-      hitRadius: 10,
-      hoverRadius: 4,
-    },
-  }
-}
-
-
-// Card Chart 2
-const cardChartData2 = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: brandInfo,
-      borderColor: 'rgba(255,255,255,.55)',
-      data: [1, 18, 9, 17, 34, 22, 11],
-    },
-  ],
-};
-
-const cardChartOpts2 = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        gridLines: {
-          color: 'transparent',
-          zeroLineColor: 'transparent',
-        },
-        ticks: {
-          fontSize: 2,
-          fontColor: 'transparent',
-        },
-
-      }],
-    yAxes: [
-      {
-        display: false,
-        ticks: {
-          display: false,
-          min: Math.min.apply(Math, cardChartData2.datasets[0].data) - 5,
-          max: Math.max.apply(Math, cardChartData2.datasets[0].data) + 5,
-        },
-      }],
-  },
-  elements: {
-    line: {
-      tension: 0.00001,
-      borderWidth: 1,
-    },
-    point: {
-      radius: 4,
-      hitRadius: 10,
-      hoverRadius: 4,
-    },
-  },
-};
-
-// Card Chart 3
-const cardChartData3 = {
-  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: 'rgba(255,255,255,.2)',
-      borderColor: 'rgba(255,255,255,.55)',
-      data: [78, 81, 80, 45, 34, 12, 40],
-    },
-  ],
-};
-
-const cardChartOpts3 = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        display: false,
-      }],
-    yAxes: [
-      {
-        display: false,
-      }],
-  },
-  elements: {
-    line: {
-      borderWidth: 2,
-    },
-    point: {
-      radius: 0,
-      hitRadius: 10,
-      hoverRadius: 4,
-    },
-  },
-};
-
-// Card Chart 4
-const cardChartData4 = {
-  labels: ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: 'rgba(255,255,255,.3)',
-      borderColor: 'transparent',
-      data: [78, 81, 80, 45, 34, 12, 40, 75, 34, 89, 32, 68, 54, 72, 18, 98],
-    },
-  ],
-};
-
-const cardChartOpts4 = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        display: false,
-        barPercentage: 0.6,
-      }],
-    yAxes: [
-      {
-        display: false,
-      }],
-  },
-};
-
-// Social Box Chart
-const socialBoxData = [
-  { data: [65, 59, 84, 84, 51, 55, 40], label: 'facebook' },
-  { data: [1, 13, 9, 17, 34, 41, 38], label: 'twitter' },
-  { data: [78, 81, 80, 45, 34, 12, 40], label: 'linkedin' },
-  { data: [35, 23, 56, 22, 97, 23, 64], label: 'google' },
-];
-
-const makeSocialBoxData = (dataSetNo) => {
-  const dataset = socialBoxData[dataSetNo];
-  const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        backgroundColor: 'rgba(255,255,255,.1)',
-        borderColor: 'rgba(255,255,255,.55)',
-        pointHoverBackgroundColor: '#fff',
-        borderWidth: 2,
-        data: dataset.data,
-        label: dataset.label,
-      },
-    ],
-  };
-  return () => data;
-};
-
-const socialChartOpts = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  responsive: true,
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        display: false,
-      }],
-    yAxes: [
-      {
-        display: false,
-      }],
-  },
-  elements: {
-    point: {
-      radius: 0,
-      hitRadius: 10,
-      hoverRadius: 4,
-      hoverBorderWidth: 3,
-    },
-  },
-};
-
-// sparkline charts
-const sparkLineChartData = [
-  {
-    data: [35, 23, 56, 22, 97, 23, 64],
-    label: 'New Clients',
-  },
-  {
-    data: [65, 59, 84, 84, 51, 55, 40],
-    label: 'Recurring Clients',
-  },
-  {
-    data: [35, 23, 56, 22, 97, 23, 64],
-    label: 'Pageviews',
-  },
-  {
-    data: [65, 59, 84, 84, 51, 55, 40],
-    label: 'Organic',
-  },
-  {
-    data: [78, 81, 80, 45, 34, 12, 40],
-    label: 'CTR',
-  },
-  {
-    data: [1, 13, 9, 17, 34, 41, 38],
-    label: 'Bounce Rate',
-  },
-];
-
-const makeSparkLineData = (dataSetNo, variant) => {
-  const dataset = sparkLineChartData[dataSetNo];
-  const data = {
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    datasets: [
-      {
-        backgroundColor: 'transparent',
-        borderColor: variant ? variant : '#c2cfd6',
-        data: dataset.data,
-        label: dataset.label,
-      },
-    ],
-  };
-  return () => data;
-};
-
-const sparklineChartOpts = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips
-  },
-  responsive: true,
-  maintainAspectRatio: true,
-  scales: {
-    xAxes: [
-      {
-        display: false,
-      }],
-    yAxes: [
-      {
-        display: false,
-      }],
-  },
-  elements: {
-    line: {
-      borderWidth: 2,
-    },
-    point: {
-      radius: 0,
-      hitRadius: 10,
-      hoverRadius: 4,
-      hoverBorderWidth: 3,
-    },
-  },
-  legend: {
-    display: false,
-  },
-};
-
-// Main Chart
-
-//Random Numbers
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-var elements = 27;
-var data1 = [];
-var data2 = [];
-var data3 = [];
-
-for (var i = 0; i <= elements; i++) {
-  data1.push(random(50, 200));
-  data2.push(random(80, 100));
-  data3.push(65);
-}
-
-const mainChart = {
-  labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-  datasets: [
-    {
-      label: 'My First dataset',
-      backgroundColor: hexToRgba(brandInfo, 10),
-      borderColor: brandInfo,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: data1,
-    },
-    {
-      label: 'My Second dataset',
-      backgroundColor: 'transparent',
-      borderColor: brandSuccess,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 2,
-      data: data2,
-    },
-    {
-      label: 'My Third dataset',
-      backgroundColor: 'transparent',
-      borderColor: brandDanger,
-      pointHoverBackgroundColor: '#fff',
-      borderWidth: 1,
-      borderDash: [8, 5],
-      data: data3,
-    },
-  ],
-};
-
-const mainChartOpts = {
-  tooltips: {
-    enabled: false,
-    custom: CustomTooltips,
-    intersect: true,
-    mode: 'index',
-    position: 'nearest',
-    callbacks: {
-      labelColor: function(tooltipItem, chart) {
-        return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
-      }
-    }
-  },
-  maintainAspectRatio: false,
-  legend: {
-    display: false,
-  },
-  scales: {
-    xAxes: [
-      {
-        gridLines: {
-          drawOnChartArea: false,
-        },
-      }],
-    yAxes: [
-      {
-        ticks: {
-          beginAtZero: true,
-          maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5),
-          max: 250,
-        },
-      }],
-  },
-  elements: {
-    point: {
-      radius: 0,
-      hitRadius: 10,
-      hoverRadius: 4,
-      hoverBorderWidth: 3,
-    },
-  },
-};
 
 //
 const bar = {
   labels: ['Mañana','Tarde','Noche'],
+  datasets: [
+  ],
+};
+const barComparative = {
+ 
+  datasets: [
+  ],
+};
+const barComparative2 = {
+  
   datasets: [
   ],
 };
@@ -604,6 +187,20 @@ class Dashboard extends Component {
       dropdownOpenBar: false,
       radioSelected: 2,
       cantidadDatosBar:0,
+      jsonTablaBase:undefined,
+      jsonTablaMostrar:undefined,
+      sort:{
+        marca:0,
+        modelo:0,
+        version:0,
+        intensidadPromedio:0,
+        velocidadPromedio:0,
+       
+      },
+       tooltipOpen:[false,false,false,false,false],
+       barComparative:[null,null],
+       nombreSalaBarComparative:["Resumen","Resumen"],
+       dropdownOpenBarComparative:[false,false]
     };
   }
 
@@ -613,15 +210,20 @@ class Dashboard extends Component {
         this.setState({
           recovery:response.data
         });
-        var salas=this.genericFilterPie(this.state.recovery);
-        var salas2=this.genericFilterBar(this.state.recovery);
-    
+        var salas=this.genericFilterPie(response.data);
+        var salas2=this.genericFilterBar(response.data);
+        var dispositivos=this.genericFilterTabla(response.data);
+       dispositivos=this.generateJsonTabla(dispositivos);
       this.setState({
         salas: Object.keys(salas),
-
+        jsonTablaBase:dispositivos,
+        jsonTablaMostrar:dispositivos,
       })
       this.moveDataToPie(salas,"Resumen");
       this.moveDataToBar(salas2,"Resumen");
+      this.moveDataToBarComparative(salas,"Resumen",0);
+      this.moveDataToBarComparative(salas,"Resumen",1);
+
 
       console.log(response);
     })
@@ -629,28 +231,107 @@ class Dashboard extends Component {
       console.log(error);
       var salas=this.genericFilterPie(this.state.recovery);
       var salas2=this.genericFilterBar(this.state.recovery);
-    
+      var dispositivos=this.genericFilterTabla(this.state.recovery);
+       dispositivos=this.generateJsonTabla(dispositivos);
       this.setState({
         salas: Object.keys(salas),
+        jsonTablaBase:dispositivos,
+        jsonTablaMostrar:dispositivos,
 
       })
       this.moveDataToPie(salas,"Resumen");
       this.moveDataToBar(salas2,"Resumen");
+      this.moveDataToBarComparative(salas,"Resumen",0);
+      this.moveDataToBarComparative(salas,"Resumen",1);
     });
       
   }
 
   componentDidMount(){
-    
     var salas=this.genericFilterPie(this.state.recovery);
-    var salas2=this.genericFilterBar(this.state.recovery);
-    
-    this.setState({
-      salas: Object.keys(salas),
+      var salas2=this.genericFilterBar(this.state.recovery);
+      var dispositivos=this.genericFilterTabla(this.state.recovery);
+       dispositivos=this.generateJsonTabla(dispositivos);
+      this.setState({
+        salas: Object.keys(salas),
+        jsonTablaBase:dispositivos,
+        jsonTablaMostrar:dispositivos,
 
-    })
-    this.moveDataToPie(salas,"Resumen");
-    this.moveDataToBar(salas2,"Resumen");
+      });
+      this.moveDataToPie(salas,"Resumen");
+      this.moveDataToBar(salas2,"Resumen");
+      this.moveDataToBarComparative(salas,"Resumen",0);
+      this.moveDataToBarComparative(salas,"Resumen",1);
+  }
+  
+  sortResults(data,prop) {
+    let baseSort={
+        marca:0,
+        modelo:0,
+        version:0,
+        intensidadPromedio:0,
+        velocidadPromedio:0,
+    };
+    let sort=this.state.sort;
+
+    data = data.sort(function(a, b) {
+        if (sort[prop]==0 || sort[prop]==-1) {
+          console.log(a,b,prop);
+          console.log(a[prop], ">" ,b[prop])
+          return (a[prop] > b[prop]);
+        }
+        else {
+          console.log(a,b);
+          console.log(a,b,prop);
+          console.log(a[prop], "<" ,b[prop])
+          return (b[prop] > a[prop]);
+        }
+    });
+    baseSort[prop]=(sort[prop]==0 || sort[prop]==-1)?1:-1;
+    this.setState({
+      sort:baseSort
+    });
+    return data;
+}
+  handleEventSort=event=>{
+    console.log(event);
+    console.log(event.target);
+    console.log(event.target.name)
+    let propiedad=event.target.id;
+    console.log(this.state.jsonTablaBase);
+    let JsonTabla=this.sortResults(this.state.jsonTablaBase,propiedad);
+    console.log(JsonTabla);
+    this.setState({
+      jsonTablaMostrar:JsonTabla,
+    });
+  };
+
+  genericFilterTabla(data){
+    /*
+    {
+      modelo:{
+        marca:,
+        version:,
+        velocidad[]
+        intensidad[]
+      }
+
+    }
+    
+    */
+   let dispositivos={};
+    data.map((dato,key)=>{
+      const modelo=dato.modelo;
+      dispositivos[modelo]=(dispositivos[modelo]==undefined)?{}:dispositivos[modelo];
+      dispositivos[modelo].marca=dato.marca;
+      dispositivos[modelo].version=dato.version;
+      dispositivos[modelo].velocidad=(dispositivos[modelo].velocidad==undefined)?[]:dispositivos[modelo].velocidad;
+      dispositivos[modelo].velocidad.push(dato.velocidad);
+      dispositivos[modelo].intensidad=(dispositivos[modelo].intensidad==undefined)?[]:dispositivos[modelo].intensidad;
+      dispositivos[modelo].intensidad.push(dato.intensidad);
+    });
+    console.log(dispositivos);
+    return dispositivos;
   }
 
   genericFilterPie(data){
@@ -666,7 +347,6 @@ class Dashboard extends Component {
         salas[element.lugar][element.estado]=(existencia==undefined)?1:existencia+1;
         
     }
-    console.log(salas);
     return salas;
   }
   genericFilterBar(data){
@@ -727,6 +407,118 @@ class Dashboard extends Component {
     console.log(salas);
     return salas;
   }
+  
+  generateJsonTabla(filterTablaData){
+    let jsonTabla=[];
+    let modelos=Object.keys(filterTablaData);
+    for (let i = 0; i < modelos.length; i++) {
+      let suma=0;
+      filterTablaData[modelos[i]].velocidad.map((velocidad)=>{
+        //console.log(parseFloat(velocidad),"velocidad",velocidad)
+        suma=parseFloat(velocidad)+suma;
+      });
+      let velocidadPromedio=suma/filterTablaData[modelos[i]].velocidad.length;
+      suma=0;
+      filterTablaData[modelos[i]].intensidad.map((intensidad)=>{
+        suma=parseFloat(intensidad)+suma;
+      });
+      let intensidadPromedio=suma/filterTablaData[modelos[i]].intensidad.length;
+      
+      let dispositivo={};
+      dispositivo.marca=filterTablaData[modelos[i]].marca;
+      dispositivo.modelo=modelos[i];
+      dispositivo.version=filterTablaData[modelos[i]].version;
+      dispositivo.velocidadPromedio=velocidadPromedio.toFixed(3);
+      dispositivo.intensidadPromedio=intensidadPromedio.toFixed(3);
+        jsonTabla.push(dispositivo);
+      
+    }
+    return jsonTabla;
+  }
+
+  generateTabla(filterTablaData){
+    return(
+      <Table bordered striped responsive size="sm">
+        <thead>
+        <tr>
+          <th className="" id="marca" onClick={this.handleEventSort}> Marca   
+            &nbsp;
+            {(this.state.sort.marca==-1)&& 
+                <i class="fa fa-sort-down"></i>
+              }
+              {(this.state.sort.marca==1)&& 
+                <i class="fa fa-sort-up"></i>
+              }
+          
+          </th>
+          <th id="modelo" onClick={this.handleEventSort}>Modelo
+          &nbsp;
+            {(this.state.sort.modelo==-1)&& 
+                <i class="fa fa-sort-down"></i>
+              }
+              {(this.state.sort.modelo==1)&& 
+                <i class="fa fa-sort-up"></i>
+              }
+          </th>
+          <th id="version" onClick={this.handleEventSort}> Version
+          &nbsp;
+            {(this.state.sort.version==-1)&& 
+                <i class="fa fa-sort-down"></i>
+              }
+              {(this.state.sort.version==1)&& 
+                <i class="fa fa-sort-up"></i>
+              }
+          </th>
+          <th id="velocidadPromedio" onClick={this.handleEventSort}>Velocidad Promedio
+          &nbsp;
+            {(this.state.sort.velocidadPromedio==-1)&& 
+                <i class="fa fa-sort-down"></i>
+              }
+              {(this.state.sort.velocidadPromedio==1)&& 
+                <i class="fa fa-sort-up"></i>
+              }
+          </th>
+          <th id="intensidadPromedio" onClick={this.handleEventSort}>intensidad Promedio
+          &nbsp;
+            {(this.state.sort.intensidadPromedio==-1)&& 
+                <i class="fa fa-sort-down"></i>
+              }
+              {(this.state.sort.intensidadPromedio==1)&& 
+                <i class="fa fa-sort-up"></i>
+              }
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        {filterTablaData && filterTablaData.map((dispositivo,key)=>{
+            return <tr key={key}>
+              <td>{dispositivo.marca}</td>
+              <td>{dispositivo.modelo}</td>
+              <td>{dispositivo.version}</td>
+              <td>{dispositivo.velocidadPromedio}</td>
+              <td>{dispositivo.intensidadPromedio}</td>
+            </tr>
+        })
+        }                  
+        </tbody>
+        <Tooltip placement="top" isOpen={this.state.tooltipOpen[0]} target="marca" toggle={() => {this.toggleTabla(0);}}>
+              Ordenar
+        </Tooltip>
+        <Tooltip placement="top" isOpen={this.state.tooltipOpen[1]} target="modelo" toggle={() => {this.toggleTabla(1);}}>
+              Ordenar
+        </Tooltip>
+        <Tooltip placement="top" isOpen={this.state.tooltipOpen[2]} target="version" toggle={() => {this.toggleTabla(2);}}>
+              Ordenar
+        </Tooltip>
+        <Tooltip placement="top" isOpen={this.state.tooltipOpen[3]} target="velocidadPromedio" toggle={() => {this.toggleTabla(3);}}>
+              Ordenar
+        </Tooltip>
+        <Tooltip placement="top" isOpen={this.state.tooltipOpen[4]} target="intensidadPromedio" toggle={() => {this.toggleTabla(4);}}>
+              Ordenar
+        </Tooltip>
+      </Table>
+    );
+  }
 
   moveDataToBar(salas,lugar){
     //var keys=Object.keys(salas);
@@ -737,6 +529,7 @@ class Dashboard extends Component {
     'Bad',
     'Undefined']
     var data=[]
+    
     bar.datasets=[];
     var cantidad=0;
     for (let i = 0; i < 5; i++) {
@@ -745,7 +538,7 @@ class Dashboard extends Component {
       dataTemp.push(salas[lugar]["Mañana"][i]);
       dataTemp.push(salas[lugar]["Tarde"][i]);
       dataTemp.push(salas[lugar]["Noche"][i]);
-      this.addingDataBar(estado[i],dataTemp,color[i])
+      this.addingDataBar(estado[i],dataTemp,color[i],bar)
       //data.push(dataTemp);
     }
     this.setState({
@@ -753,7 +546,40 @@ class Dashboard extends Component {
       cantidadDatosBar:cantidad
     })
   }
-  addingDataBar=(nombre,data,rgb)=>{
+  moveDataToBarComparative(salas,lugar,flag){
+    //var keys=Object.keys(salas);
+    var datos=salas[lugar];
+    var color=["(0, 255, 255)","(128, 255, 0)","(255, 255, 0)","(255, 64, 0)","(132, 132, 132)"]
+    var estado=['Excellent',
+    'Good',
+    'Moderate',
+    'Bad',
+    'Undefined']
+    var data=[]
+    
+    var barsito=(flag==0)?barComparative:barComparative2;
+    if(flag==0){
+      barComparative.datasets=[]
+    }else{
+      barComparative2.datasets=[];
+    }
+    data.push((datos.EXCELLENT==undefined)?0:datos.EXCELLENT);
+    data.push((datos.GOOD==undefined)?0:datos.GOOD);
+    data.push((datos.MODERATE==undefined)?0:datos.MODERATE);
+    data.push((datos.BAD==undefined)?0:datos.BAD);
+    data.push((datos.null==undefined)?0:datos.null);
+    for (let i = 0; i < data.length; i++) {
+      this.addingDataBar(estado[i],[data[i]],color[i],barsito);
+    }
+    var comparative=this.state.barComparative;
+    comparative[flag]=barsito;
+    this.setState({
+      barComparative:comparative
+    })
+    
+    
+  }
+  addingDataBar=(nombre,data,rgb,bar)=>{
     
     var hue = 'rgba' + rgb.substr(0,rgb.length-1);
     var element={
@@ -771,6 +597,7 @@ class Dashboard extends Component {
       barChard:bar,
     })*/
   }
+ 
 
   moveDataToPie(salas,lugar){
     const datos=salas[lugar];
@@ -789,7 +616,7 @@ class Dashboard extends Component {
 
   handleMoveDataPie=event=>{
     const name=event.target.name;
-    const salas=this.genericFilterPie(DataRecovery);
+    const salas=this.genericFilterPie(this.state.recovery);
     this.moveDataToPie(salas,name);
     this.setState({
       nombreSalaPie:name
@@ -797,10 +624,20 @@ class Dashboard extends Component {
   }
   handleMoveDataBar=event=>{
     const name=event.target.name;
-    const salas=this.genericFilterBar(DataRecovery);
+    const salas=this.genericFilterBar(this.state.recovery);
     this.moveDataToBar(salas,name);
     this.setState({
       nombreSalaBar:name
+    });
+  } 
+  handleMoveDataBarComparative=posicion=>event=>{
+    const name=event.target.name;
+    const salas=this.genericFilterPie(this.state.recovery);
+    this.moveDataToBarComparative(salas,name,posicion);
+    var comparative=this.state.nombreSalaBarComparative;
+    comparative[posicion]=name;
+    this.setState({
+      nombreSalaBarComparative:comparative
     });
   }
 
@@ -815,6 +652,21 @@ class Dashboard extends Component {
       dropdownOpenBar: !this.state.dropdownOpenBar,
     });
   }
+  toggleTabla(i) {
+    const newArray = this.state.tooltipOpen.map((element, index) => {
+      return (index === i ? !element : false);
+    });
+    this.setState({
+      tooltipOpen: newArray,
+    });
+  }
+  toggleBarComparative(i){
+    var comparative=this.state.dropdownOpenBarComparative;
+    comparative[i]=!this.state.dropdownOpenBarComparative[i];
+    this.setState({
+      dropdownOpenBarComparative:comparative
+    })
+  }
 
   onRadioBtnClick(radioSelected) {
     this.setState({
@@ -825,7 +677,6 @@ class Dashboard extends Component {
   loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
 
   render() {
-    
     return (
       <div className="animated fadeIn">
         <Row>
@@ -882,7 +733,7 @@ class Dashboard extends Component {
                     <Bar data={this.state.barChard} options={options} plugins={plugins} height="90%"/>
                   </div>
                   <Row>
-                    <Col sm={{ size: 4, order: 6, offset: 4 }}>
+                    <Col sm={{ size: 6, order: 6, offset: 3 }}>
                       <Card className="card-accent-success text-white bg-info text-center">
                         <CardBody>
                         <strong> Cantidad de datos para {this.state.nombreSalaBar}: <strong>{this.state.cantidadDatosBar} </strong> datos </strong>
@@ -898,42 +749,81 @@ class Dashboard extends Component {
         <Row>
           <Col>
             <Card>
-              <CardBody>
-               
-                <div className="chart-wrapper" style={{ height: 300 + 'px', marginTop: 40 + 'px' }}>
-                  <Line data={mainChart} options={mainChartOpts} height={300} />
-                </div>
-              </CardBody>
-              <CardFooter>
-                <Row className="text-center">
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Visits</div>
-                    <strong>29.703 Users (40%)</strong>
-                    <Progress className="progress-xs mt-2" color="success" value="40" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Unique</div>
-                    <strong>24.093 Users (20%)</strong>
-                    <Progress className="progress-xs mt-2" color="info" value="20" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">Pageviews</div>
-                    <strong>78.706 Views (60%)</strong>
-                    <Progress className="progress-xs mt-2" color="warning" value="60" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0">
-                    <div className="text-muted">New Users</div>
-                    <strong>22.123 Users (80%)</strong>
-                    <Progress className="progress-xs mt-2" color="danger" value="80" />
-                  </Col>
-                  <Col sm={12} md className="mb-sm-2 mb-0 d-md-down-none">
-                    <div className="text-muted">Bounce Rate</div>
-                    <strong>Average Rate (40.15%)</strong>
-                    <Progress className="progress-xs mt-2" color="primary" value="40" />
-                  </Col>
-                </Row>
-              </CardFooter>
-            </Card>
+                <CardHeader>
+                    <strong>Tabla de Dispositivos</strong>
+                </CardHeader>
+                <CardBody>
+                  {this.generateTabla(this.state.jsonTablaMostrar)}
+                  
+                </CardBody>
+              </Card>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Card>
+                <CardHeader>
+                    <Row>
+                    <Col>
+                        
+                          <ButtonDropdown isOpen={this.state.dropdownOpenBarComparative[0]} toggle={() => { this.toggleBarComparative(0); }}>
+                          <DropdownToggle caret>
+                            {this.state.nombreSalaBarComparative[0]}
+                          </DropdownToggle>
+                          <DropdownMenu >
+                            <DropdownItem header>Salas</DropdownItem>
+                            {this.state.salas && this.state.salas.map((sala,key)=>{
+                              return <DropdownItem key={key} name={sala} onClick={this.handleMoveDataBarComparative(0)}>{sala}</DropdownItem>;
+                            })
+                            }
+                          </DropdownMenu>
+                        </ButtonDropdown>
+                        
+                      </Col>
+                      <Col className="text-center">
+                      <strong>Comparador de Salas</strong> 
+                      <br/> 
+                      (Estado de Red)
+                      </Col>
+                      <Col>
+                      <div className="card-header-actions">
+                        <ButtonDropdown isOpen={this.state.dropdownOpenBarComparative[1]} toggle={() => { this.toggleBarComparative(1); }}>
+                        <DropdownToggle caret>
+                          {this.state.nombreSalaBarComparative[1]}
+                        </DropdownToggle>
+                        <DropdownMenu right>
+                          <DropdownItem header>Salas</DropdownItem>
+                          {this.state.salas && this.state.salas.map((sala,key)=>{
+                            return <DropdownItem key={key} name={sala} onClick={this.handleMoveDataBarComparative(1)}>{sala}</DropdownItem>;
+                          })
+                          }
+                        </DropdownMenu>
+                      </ButtonDropdown>
+                      </div>
+                      </Col>
+                    </Row>
+                    
+                    
+                    
+                  
+                </CardHeader>
+                <CardBody>
+                  <Row>
+                    <Col sm={6}>
+                      <div className="chart-wrapper" >
+                        <Bar data={this.state.barComparative[0]} options={options} plugins={plugins} height={100}/>
+                      </div>
+                    </Col>
+                    <Col sm={6}>
+                    <div className="chart-wrapper" >
+                        <Bar data={this.state.barComparative[1]} options={options} plugins={plugins} height={100}/>
+                      </div>
+                    </Col>
+                  </Row>
+                  
+                  
+                </CardBody>
+              </Card>
           </Col>
         </Row>
 
